@@ -1,6 +1,47 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
+  #有効なファクトリー（ユーザー情報）を持つこと
+    it "has a valid factory" do 
+      expect(FactoryBot.build(:user)).to be_valid
+    end 
+    
+    #名がないと無効
+    it "is invalid with a first_name "do 
+      user = FactoryBot.build(:user,first_name: nil)
+      user.valid?
+      expect(user.errors[:first_name]).to include("can'be blank")
+    end 
+     
+     #性がないと無効
+      it "is invalid with a last_name "do 
+      user = FactoryBot.build(:user,last_name: nil)
+      user.valid?
+      expect(user.errors[:last_name]).to include("can'be blank")
+      end 
+  
+      # メールアドレスがなければ無効な状態であること 
+      it "is invalid without an email address" do
+      user = FactoryBot.build(:user, email: nil)
+      user.valid?
+      expect(user.errors[:email]).to include("can't be blank")
+      end
+      
+      # ユーザーのフルネームを文字列として返すこと
+      it "returns a user's full name as a string" do
+      user = FactoryBot.build(:user, first_name: "masa",last_name: "umeda")
+      user.valid?
+      expect(user.name).to eq "masa umeda"
+      end 
+    
+    # 重複したメールアドレスなら無効な状態であること
+     it "is invalid with a duplicate email address" do
+     FactoryBot.create(:user, email: "aaron@example.com")
+     user = FactoryBot.build(:user, email: "aaron@example.com")
+     user.valid?
+     expect(user.errors[:email]).to include("has already been taken")
+     end
+      
   it "is valid with a first name, last name and email, and password" do
     user = User.new(
       first_name: "Aaron",
@@ -54,4 +95,7 @@ RSpec.describe User, type: :model do
     )
     expect(user.name).to eq "John Doe"
   end
-end
+  
+end 
+    
+
