@@ -10,14 +10,14 @@ RSpec.describe User, type: :model do
     it "is invalid with a first_name "do 
       user = FactoryBot.build(:user,first_name: nil)
       user.valid?
-      expect(user.errors[:first_name]).to include("can'be blank")
+      expect(user.errors[:first_name]).to include("can't be blank")
     end 
      
      #性がないと無効
       it "is invalid with a last_name "do 
       user = FactoryBot.build(:user,last_name: nil)
       user.valid?
-      expect(user.errors[:last_name]).to include("can'be blank")
+      expect(user.errors[:last_name]).to include("can't be blank")
       end 
   
       # メールアドレスがなければ無効な状態であること 
