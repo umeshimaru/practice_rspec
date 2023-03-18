@@ -21,7 +21,28 @@ RSpec.describe Project, type: :model do
     expect(new_project.errors[:name]).to include("has already been taken")
   end
 
-  it "allows two users to share a project name" do
+
+
+# 遅延ステータス describe"latestatus"do
+# 締切日が過ぎていれば遅延していること
+it "is late when the due date is past today" do
+    project = FactoryBot.create(:project_due_yesterday)
+    expect(project).to be_late 
+    end
+    
+# 締切日が今日ならスケジュールどおりであること
+it "is on time when the due date is today" do
+    project = FactoryBot.create(:project_due_today)
+    expect(project).to_not be_late 
+end
+
+# 締切日が未来ならスケジュールどおりであること
+it "is on time when the due date is in the future" do
+   project = FactoryBot.create(:project_due_tomorrow)
+   expect(project).to_not be_late
+end
+
+ it "allows two users to share a project name" do
     user = User.create(
       first_name: "Joe",
       last_name:  "Tester",
@@ -45,5 +66,10 @@ RSpec.describe Project, type: :model do
     )
 
     expect(other_project).to be_valid
-  end
+
+
 end
+
+ 
+  end
+
